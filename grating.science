@@ -1,0 +1,8 @@
+server {
+    listen 80;
+    listen [::]:80;
+    server_name grating.science;
+    access_log /var/log/nginx/grating/access.log;
+    error_log /var/log/nginx/grating/error.log;
+
+}
