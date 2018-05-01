@@ -24,6 +24,7 @@ ydl_audio_opts = {
 }
 
 ydl_video_opts = {
-    'format': 'bestvideo/best',
+    'format': 'bestvideo/mp4',
+    # 'outtmpl': os.path.join(YOUTUBE_DOWNLOAD_DIR, 'video', '%(id)s')
     'outtmpl': os.path.join(YOUTUBE_DOWNLOAD_DIR, 'video', '%(id)s.%(ext)s')
 }

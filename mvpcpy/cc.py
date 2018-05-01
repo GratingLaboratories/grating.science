@@ -121,8 +121,7 @@ if __name__ =='__main__':
     except (ValueError, IndexError):
         print('Invalid backgroud color')
         exit(1)
-
-    col_map = col_mapper_generator(args.resolution, args.ppl, args.wpl)
-
-    fc = FilmCoverter(args.input, args.output, col_map, (left_bg, right_bg))
-    fc.convert(args.resolution)
+    else:
+        col_map = col_mapper_generator(args.resolution, args.ppl, args.wpl)
+        fc = FilmCoverter(args.input, args.output, col_map, (left_bg, right_bg))
+        fc.convert(args.resolution)
