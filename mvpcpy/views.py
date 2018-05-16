@@ -166,7 +166,6 @@ class VideoConverter:
 
 
 @require_http_methods(['POST', ])
-@csrf_exempt
 def youtube_link(request):
     v_id = request.POST.get('v_id')
     agreed = request.POST.get('agreeed', None)
@@ -188,7 +187,6 @@ def youtube_link(request):
 
 
 @require_http_methods(['POST', ])
-@csrf_exempt
 def convert(request):
     try:
         wpl = int(request.POST.get('wpl'))
@@ -211,7 +209,6 @@ def convert(request):
 
 
 @require_http_methods(['GET', ])
-@csrf_exempt
 def fetch_calibration(request):
     try:
         width = int(request.GET.get('width'))
@@ -248,7 +245,6 @@ def fetch_calibration(request):
 
 
 @require_http_methods(['GET', ])
-@csrf_exempt
 def query_status(request):
     try:
         wpl = int(request.GET.get('wpl'))
@@ -280,7 +276,6 @@ def index(request):
 
 
 @require_http_methods(['GET', ])
-@csrf_exempt
 def test(request):
     return HttpResponse(None)
 
