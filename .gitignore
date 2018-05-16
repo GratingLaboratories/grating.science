@@ -103,4 +103,5 @@ ENV/
 # Settings
 gs_site/settings.py
 
+.sqlite3
 .idea/

@@ -88,14 +88,12 @@ class VideoConverter:
         while not cls.stop:
             y_video, params, pe = cls._task_queue.get()
             logging.info('Converting')
-            print(cls.TPE.submit(cls._convert, y_video, params, pe).result())
+            cls.TPE.submit(cls._convert, y_video, params, pe)
 
     @classmethod
     def _convert(cls, y_video: YouTubeVideos, params, pe:ProcessEvent):
-        print('In _convert')
         wpl, ppl, width, height = params
         tmp_v_path = os.path.join(settings.TMP_DIR, '{}.{}'.format(pe.rid, 'mp4'))
-        print(tmp_v_path)
         tmp_a_path = os.path.join(settings.TMP_DIR, '{}.{}'.format(pe.rid, 'mp3'))
         output_path = os.path.join(settings.VIDEO_OUTPUT_DIR, '{}.{}'.format(pe.rid, 'mp4'))
         v_input_path = os.path.join(settings.YOUTUBE_DOWNLOAD_DIR, 'video', '{}.{}'.format(y_video.v_id, y_video.v_ext))
@@ -168,8 +166,7 @@ class VideoConverter:
 @require_http_methods(['POST', ])
 def youtube_link(request):
     v_id = request.POST.get('v_id')
-    agreed = request.POST.get('agreeed', None)
-    print(agreed)
+    agreed = request.POST.get('no_cc', None)
 
     if not v_id:
         return JsonResponse(dict(info='Vid Error', code=1))
@@ -230,7 +227,6 @@ def fetch_calibration(request):
     if cali_stage.lower() == 'ppl':
         filename += '_ppl.png'
         if not os.path.exists(os.path.join(settings.CALIB_PIC_DIR, filename)):
-            print('Run it')
             utils.mk_ppl_img(os.path.join(settings.CALIB_PIC_DIR, filename), width, height, ppl)
     elif cali_stage.lower() == 'wpl':
         filename += '_wpl.png'
@@ -255,7 +251,6 @@ def query_status(request):
     except (ValueError, TypeError):
         return JsonResponse(dict(code=64, info='Invalid Parameters'))
 
-    print([wpl, ppl, width, height, v_id])
     if not all([wpl, ppl, width, height, v_id]):
         return JsonResponse(dict(code=128, info='Insufficient Parameters'))
 
