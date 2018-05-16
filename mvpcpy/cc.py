@@ -1,6 +1,7 @@
 import numpy as np
 import argparse
 import cv2
+import sys
 import os
 
 from collections import namedtuple
@@ -13,7 +14,7 @@ class FilmCoverter:
         self.outfile = outfile
         self.bg_colors = bg_colors
 
-    def convert(self, resolution, fourcc='DIVX', echo=True):
+    def convert(self, resolution, fourcc='divx', echo=True):
         self.cap = cv2.VideoCapture(self.infile)
         IN_HEIGHT = int(self.cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
         IN_WIDTH = int(self.cap.get(cv2.CAP_PROP_FRAME_WIDTH))
@@ -34,7 +35,6 @@ class FilmCoverter:
         canvas[:, WIDTH // 2:, 1] = np.ones((HEIGHT, WIDTH // 2), dtype=np.uint8) * self.bg_colors[1].green
         canvas[:, WIDTH // 2:, 2] = np.ones((HEIGHT, WIDTH // 2), dtype=np.uint8) * self.bg_colors[1].red
 
-        cv2.imwrite('res.jpg', canvas)
         for i in range(WIDTH):
             outframe[:, i, :] = canvas[:, self.col_map[i], :] if self.col_map[i] != -1 else np.zeros((HEIGHT, 3), dtype=np.uint8)
         while cnt < 30 * FPS:

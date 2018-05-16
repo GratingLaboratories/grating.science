@@ -3,6 +3,7 @@ import os
 YOUTUBE_DOWNLOAD_DIR = '/data/grating.science/data/youtube-dl/'
 TMP_DIR = '/data/grating.science/data/tmp/'
 VIDEO_OUTPUT_DIR = '/data/grating.science/data/output/'
+CALIB_PIC_DIR = '/data/grating.science/data/cali'
 
 
 for key, path in locals().copy().items():
@@ -25,6 +26,5 @@ ydl_audio_opts = {
 
 ydl_video_opts = {
     'format': 'bestvideo/mp4',
-    # 'outtmpl': os.path.join(YOUTUBE_DOWNLOAD_DIR, 'video', '%(id)s')
     'outtmpl': os.path.join(YOUTUBE_DOWNLOAD_DIR, 'video', '%(id)s.%(ext)s')
 }
