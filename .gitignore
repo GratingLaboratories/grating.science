@@ -101,6 +101,6 @@ ENV/
 .mypy_cache/
 
 # Settings
-/gs_site/settings.py
+gs_site/settings.py
 
 .idea/
