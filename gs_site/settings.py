@@ -25,12 +25,13 @@ SECRET_KEY = 'n#ls_42at&*f9khp=1=p(jr%shpdz&i1+j@e(ht417f@)mli0x'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['apre', ]
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    'mvpcpy.apps.MvpcpyConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
