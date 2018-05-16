@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html>
+<title>Grating Science Converter</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.12/css/all.css"
+      integrity="sha384-G0fIWCsCzJIMAVNQPfjH08cyYaUtMwjJwqiRKxxE/rx96Uroj1BtIQ6MLJuheaO9" crossorigin="anonymous">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<style>
+    body, h1, h2, h3, h4, h5, h6 {
+        font-family: "Montserrat", sans-serif
+    }
+
+    .w3-row-padding img {
+        margin-bottom: 12px
+    }
+
+    /* Set the width of the sidebar to 120px */
+    .w3-sidebar {
+        width: 120px;
+        background: #222;
+    }
+
+    /* Add a left margin to the "page content" that matches the width of the sidebar (120px) */
+    #main {
+        margin-left: 120px
+    }
+
+    /* Remove margins from "page content" on small screens */
+    @media only screen and (max-width: 600px) {
+        #main {
+            margin-left: 0
+        }
+    }
+
+    .no-focus-border:focus {
+        outline-width: 0
+    }
+
+    .w3-input {
+        padding-bottom: 2px;
+    }
+
+    .inline-input {
+        display: inline;
+    }
+
+    .container {
+        border-bottom: 1px solid #aaa;
+    }
+
+    .w3-button {
+        width: 20rem;
+    }
+
+    .on-error {
+        padding-top: 10px;
+        display: none;
+    }
+
+    .on-error::before {
+        content: '✖';
+        position: relative;
+        left: 25px;
+        color: #fff;
+    }
+
+    .error-text {
+        padding-left: 30px;
+    }
+
+    .snackbar {
+        visibility: hidden;
+        min-width: 250px;
+        margin-left: -125px;
+        background-color: #333;
+        color: #fff;
+        text-align: center;
+        border-radius: 2px;
+        padding: 16px;
+        position: fixed;
+        z-index: 100;
+        left: 50%;
+        bottom: 30px;
+        font-size: 17px;
+    }
+
+    .snackbar.show {
+        visibility: visible;
+        -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+        animation: fadein 0.5s, fadeout 0.5s 2.5s;
+    }
+
+    @-webkit-keyframes fadein {
+        from {
+            bottom: 0;
+            opacity: 0;
+        }
+        to {
+            bottom: 30px;
+            opacity: 1;
+        }
+    }
+
+    @keyframes fadein {
+        from {
+            bottom: 0;
+            opacity: 0;
+        }
+        to {
+            bottom: 30px;
+            opacity: 1;
+        }
+    }
+
+    @-webkit-keyframes fadeout {
+        from {
+            bottom: 30px;
+            opacity: 1;
+        }
+        to {
+            bottom: 0;
+            opacity: 0;
+        }
+    }
+
+    @keyframes fadeout {
+        from {
+            bottom: 30px;
+            opacity: 1;
+        }
+        to {
+            bottom: 0;
+            opacity: 0;
+        }
+    }
+
+    #test-img-container {
+        height: 100%;
+        width: 100%;
+
+        position: fixed;
+        left: -100%;
+        top: 0;
+        z-index: 10;
+
+        -webkit-transition: left 1s;
+        transition: left 1s;
+    }
+
+    #test-img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover
+    }
+
+    #test-img-bts {
+        z-index: 11;
+        position: fixed;
+        top: 0;
+        right: -100%;
+        height: 100%;
+        font-weight: bold;
+
+        -webkit-transition: right 1s;
+        transition: right 1s;
+    }
+
+    .cali-bts {
+        width: 50px;
+        height: 25%;
+    }
+
+    #pl-modal {
+        z-index: 12;
+        position: fixed;
+        left: 0;
+        top: -100%;
+
+        height: 100%;
+        width: 100%;
+
+        -webkit-transition: top .6s;
+        transition: top .6s;
+    }
+
+    #pl-modal-container {
+        width: 60%;
+        margin: auto;
+        margin-top: 10%;
+        padding: 30px 20px 15px;
+    }
+</style>
+<body class="w3-black">
+
+<!-- Icon Bar (Sidebar - hidden on small screens) -->
+<nav class="w3-sidebar w3-bar-block w3-small w3-hide-small w3-center">
+    <!-- Avatar image in top left corner -->
+    <a href="#youtube-link" class="w3-bar-item w3-button w3-padding-large w3-hover-black">
+        <i class="fab fa-youtube w3-xxlarge"></i>
+        <p>1.YouTube Link</p>
+    </a>
+    <a href="#calibration" class="w3-bar-item w3-button w3-padding-large w3-hover-black">
+        <i class="fas fa-calendar-check w3-xxlarge"></i>
+        <p>2.Calibration</p>
+    </a>
+    <a href="#conversion" class="w3-bar-item w3-button w3-padding-large w3-hover-black">
+        <i class="fas fa-exchange-alt w3-xxlarge"></i>
+        <p>3.Conversion</p>
+    </a>
+    <a href="#play-video" class="w3-bar-item w3-button w3-padding-large w3-hover-black">
+        <i class="fas fa-play-circle w3-xxlarge"></i>
+        <p>4.Play It!</p>
+    </a>
+</nav>
+
+<!-- Navbar on small screens (Hidden on medium and large screens) -->
+<div class="w3-top w3-hide-large w3-hide-medium" id="myNavbar">
+    <div class="w3-bar w3-black w3-opacity w3-hover-opacity-off w3-center w3-small">
+        <a href="#youtube-link" class="w3-bar-item w3-button" style="width:25% !important">1.YouTube Link</a>
+        <a href="#calibration" class="w3-bar-item w3-button" style="width:25% !important">2.Calibration</a>
+        <a href="#conversion" class="w3-bar-item w3-button" style="width:25% !important">3.Conversion</a>
+        <a href="#play-video" class="w3-bar-item w3-button" style="width:25% !important">4.Play It!</a>
+    </div>
+</div>
+
+<!-- Page Content -->
+<div class="w3-padding-large" id="main">
+    <!-- YouTube Link Section -->
+    <div class="container" style="padding-bottom: 32px" id="youtube-link">
+        <header class="w3-container w3-padding-32 w3-center w3-black">
+            <h2>First, tell me the YouTube video's link.</h2>
+        </header>
+
+        <form class="w3-container" id="youtube-link-form">
+            <div>
+                <span style="font-size: 1.3rem">https://www.youtube.com/watch?v=</span>
+                <input class="w3-input w3-black no-focus-border inline-input" name="v_id"
+                       style="width: 12rem; padding-left: 0; font-size: 1.3rem" id="yl-v-id"
+                       type="text" required>
+                <div class="on-error">
+                    <span class="w3-tag w3-red error-text"></span>
+                </div>
+            </div>
+            <div style="padding-top: 20px">
+                <input class="w3-check" type="checkbox" id="yl-uat" name="user-agreement" checked="checked">
+                <label>I have read and agree with <a href="#">User Agreement</a></label>
+                <div class="on-error">
+                    <span class="w3-tag w3-red error-text">You must agree to our user agreement before going further.</span>
+                </div>
+            </div>
+            <div style="padding-top: 10px">
+                <input class="w3-check" type="checkbox" id="yl-nocc" name="no_cc">
+                <label>(Optional) I understand what <a href="#">"YouTube Standard License"</a> means and I insist on
+                    processing the "YouTube Standard License" video on my own. I will responsible for all possible
+                    consequences. (<a href="#">What does it mean?</a>)</label>
+                <div class="on-error">
+                    <span class="w3-tag w3-red error-text">You must agree to the statement if you want to process a non-"Creative Common" licensed video.</span>
+                </div>
+            </div>
+            <div style="padding-top: 20px;" class="w3-center">
+                <button type="button" id="yl-bt" class="w3-button w3-white" onclick="youtube_link_uploader()"
+                        style="font-weight: 900">Download Video Now
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Calibration Section -->
+    <div class="container w3-padding-32" id="calibration">
+        <header class="w3-container w3-padding-32 w3-center w3-black">
+            <h2>Second, let's measure your device's parameters.</h2>
+        </header>
+        <form class="w3-container" id="calibration-form">
+            <div style="font-size: 1.3rem;">
+                My screen's resolution is
+                <input class="w3-input w3-black no-focus-border inline-input" type="number" name="width"
+                       id="cl-width" placeholder="Width" style="width: 6rem;">px
+                <span style="font-size: x-large"> &times </span>
+                <input class="w3-input w3-black no-focus-border inline-input" type="number" name="height"
+                       id="cl-height" placeholder="Height" style="width: 6rem;">px
+                <div class="on-error">
+                    <span class="w3-tag w3-red error-text"></span>
+                </div>
+            </div>
+            <div style="padding-top: 20px;" class="w3-center">
+                <button type="button" class="w3-button w3-white" onclick="full_img_test()"
+                        style="font-weight: 900">Generate Calibration Pattern
+                </button>
+            </div>
+        </form>
+        <div id="test-img-container">
+            <img src="http://apre/mvpcpy/calibration/?width=2880&height=1440&ppl=13&stage=ppl" id="test-img">
+            <div class="w3-right" id="test-img-bts">
+                <button onclick="next_img()" class="cali-bts w3-block w3-button w3-blue" id="next-img">&rarr;</button>
+                <button onclick="prev_img()" class="cali-bts w3-block w3-button w3-teal" id="prev-img">&larr;</button>
+                <button onclick="check()" class="cali-bts w3-block w3-button w3-green" id="done">&check;</button>
+                <button onclick="close_test()" class="cali-bts w3-block w3-button w3-red" id="close">&cross;</button>
+            </div>
+        </div>
+        <div id="pl-modal">
+            <div id="pl-modal-container" class="w3-container w3-black w3-margin-32 w3-center">
+                <form class="w3-container">
+                    <label for="pl-input" id="pl-label" class="w3-inline">My ppl is:</label>
+                    <input class="w3-input no-focus-border inline-input w3-black" type="number" style="width: 6rem;"
+                           id="pl-input">px
+                    <div class="on-error">
+                        <span class="w3-tag w3-red error-text"></span>
+                    </div>
+                    <div align="right">
+                        <button onclick="modal_check()" class="w3-black w3-button" style="width: 50px;" type="button">
+                            &check;
+                        </button>
+                        <button onclick="$('#pl-modal').css('top', '-100%');" type="button"
+                                class="w3-black w3-button" style="width: 50px;">&cross;
+                        </button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+        <hr style="width:200px" class="w3-opacity">
+        <h3>How to calibrate?</h3>
+        <p>The quick fox jumps on lazy dig</p>
+    </div>
+
+    <!-- Conversion Section -->
+    <div class="container w3-padding-32" id="conversion">
+        <header class="w3-container w3-padding-32 w3-center w3-black">
+            <h2>Third, let's convert the video.</h2>
+        </header>
+        <form class="w3-container" id="conversion-form">
+            <div style="font-size: 1.3rem;">
+                My screen's width is
+                <input class="w3-input w3-black no-focus-border inline-input" type="number" name="width"
+                       id="cv-width" placeholder="1920" style="width: 6rem;">px
+                <div class="on-error">
+                    <span class="w3-tag w3-red error-text"></span>
+                </div>
+            </div>
+            <div style="font-size: 1.3rem;">
+                My screen's height is
+                <input class="w3-input w3-black no-focus-border inline-input" type="number" name="height"
+                       id="cv-height" placeholder="1080" style="width: 6rem;">px
+                <div class="on-error">
+                    <span class="w3-tag w3-red error-text"></span>
+                </div>
+            </div>
+            <div style="font-size: 1.3rem;">
+                My screen's ppl is
+                <input class="w3-input w3-black no-focus-border inline-input" type="number" name="ppl"
+                       id="cv-ppl" placeholder="13.6" style="width: 6rem;">px
+                <div class="on-error">
+                    <span class="w3-tag w3-red error-text"></span>
+                </div>
+            </div>
+            <div style="font-size: 1.3rem;">
+                My screen's wpl is
+                <input class="w3-input w3-black no-focus-border inline-input" type="number" name="wpl"
+                       id="cv-wpl" placeholder="5" style="width: 6rem;">px
+                <div class="on-error">
+                    <span class="w3-tag w3-red error-text"></span>
+                </div>
+            </div>
+            <div style="padding-top: 20px; display: none">
+                Oops, we are still downloading the video for your, it may take a while, please be patient.
+            </div>
+            <div style="padding-top: 20px; display: none;">
+                WOW! YouTube video is ready to be converted!
+            </div>
+            <div style="padding-top: 20px;" class="w3-center">
+                <button onclick="convert_uploader()" type="button" class="w3-button w3-white" id="cv-bt" style="font-weight: 900">Convert!</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Play Video Section -->
+    <div class="container w3-padding-32" id="play-video">
+        <header class="w3-container w3-padding-32 w3-center w3-black">
+            <h2>Finally, enjoy the video!</h2>
+        </header>
+        <div class="status" style="font-size: 1.3rem">
+            Conversion Status: <span id="pv-status" class="w3-tag w3-green" style="text-transform: capitalize;">Empty</span>
+        </div>
+        <div id="pv-player" class="player w3-center" style="padding-top: 20px; display: none">
+
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="w3-content w3-padding-64 w3-text-grey w3-xlarge">
+
+        <!-- End footer -->
+    </footer>
+
+    <!-- END PAGE CONTENT -->
+</div>
+
+<form id="js-ajax-token" style="display: none">
+    {% csrf_token %}
+</form>
+
+<script>
+    let step = 1;
+    let aArray = ["#youtube-link", "#calibration", "#conversion", "#play-video"];
+    let token_val;
+    let width, height, ppl, wpl;
+    let ppl_pointer = 13;
+    let stage = "ppl_stage";
+    let vid_fix;
+    let check_status = false;
+    let query_interval = setInterval(function () {
+        query_status();
+    }, 3000);
+
+    $(document).ready(function () {
+        $("a").on('click', function (event) {
+            if (this.hash !== "") {
+                event.preventDefault();
+                let hash = this.hash;
+                $('html, body').animate({
+                    scrollTop: $(hash).offset().top
+                }, 800, function () {
+                    window.location.hash = hash;
+                });
+            }
+        });
+
+        $(window).scroll(function () {
+            let windowPos = $(window).scrollTop();
+            for (let i = 0; i < aArray.length; i++) {
+                let theID = aArray[i];
+                let secPosition = $(theID).offset().top;
+                secPosition = secPosition - 135;
+                let divHeight = $(theID).height();
+                divHeight = divHeight + 90;
+
+                if (windowPos >= secPosition && windowPos < (secPosition + divHeight)) {
+                    $("a[href='" + theID + "']").addClass("w3-black");
+                } else {
+                    $("a[href='" + theID + "']").removeClass("w3-black");
+                }
+            }
+        });
+    });
+
+
+    $(document).ready(function () {
+        let token = $("#js-ajax-token").find("input");
+        token_val = token.val();
+
+        $("form").keydown(function (event) {
+            if (event.keyCode === 13) {
+                event.preventDefault();
+                return false;
+            }
+        });
+
+        $("input:text").change(function () {
+            $(this).parent().find(".on-error").hide();
+        });
+    });
+
+
+    function toast(msg) {
+        let blk = $('<div/>', {
+            class: 'snackbar'
+        }).html(msg);
+        $("body").append(blk);
+        blk.addClass('show');
+        setTimeout(function () {
+            blk.removeClass('show');
+            blk.remove();
+        }, 3000);
+    }
+
+
+    function youtube_link_uploader() {
+        let v_id = $("#yl-v-id");
+        let uat = $("#yl-uat");
+        let nocc = $("#yl-nocc");
+
+        // Check variables
+        if (!uat.is(":checked")) {
+            uat.parent().find(".on-error").show();
+            return;
+        }
+
+        if (v_id.val() === "") {
+            v_id.parent().find(".on-error").show().find("span").text("Please provide a valid youtube link.");
+            return;
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "{% url 'youtube-link' %}",
+            data: {
+                csrfmiddlewaretoken: token_val,
+                no_cc: nocc.val(),
+                v_id: v_id.val()
+            },
+            success: function (data) {
+                switch (data.code) {
+                    case 0:
+                        v_id.prop('disabled', true);
+                        uat.prop('disabled', true);
+                        nocc.prop('disabled', true);
+                        $("#yl-bt").prop('disabled', true);
+                        vid_fix = v_id.val();
+                        toast("Starting downloading");
+                        step += 1;
+                        break;
+                    case 1:
+                        v_id.parent().find(".on-error").show().find("span").text("Please provide a valid youtube link.");
+                        break;
+                    case 2:
+                        nocc.parent().find(".on-error").show();
+                        break;
+                    case 4:
+                        v_id.parent().find(".on-error").show().find("span").text("Video not found, please check the link.");
+                        break;
+                }
+            },
+            error: function () {
+                toast("Oops, it seems like we cannot connect to our server right now.");
+            }
+        });
+    }
+
+
+    function convert_uploader() {
+        let cv_ppl = $("#cv-ppl");
+        let cv_wpl = $("#cv-wpl");
+        let cv_width = $("#cv-width");
+        let cv_height = $("#cv-height");
+
+        if (step < 2 && false) {
+            toast("Please complete step " + 1);
+            $('html, body').animate({
+                scrollTop: $(aArray[0]).offset().top
+            }, 800);
+            return;
+        }
+
+        ppl = parseFloat(cv_ppl.val());
+        wpl = parseInt(cv_wpl.val());
+        width = parseInt(cv_width.val());
+        height = parseInt(cv_height.val());
+
+        if (!(ppl > 0) || !(wpl > 0) || !(width > 0) || !(height > 0)) {
+            cv_wpl.parent().find(".on-error").show().find("span").text("Please enter valid ppl and wpl.");
+            return;
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "{% url 'convert' %}",
+            data: {
+                csrfmiddlewaretoken: token_val,
+                v_id: vid_fix,
+                ppl: ppl,
+                wpl: wpl,
+                width: width,
+                height: height
+            },
+            success: function (data) {
+                switch (data.code) {
+                    case 0:
+                        $("#cv-bt").prop('disabled', true).text("Converting");
+                        cv_ppl.prop('disabled', true);
+                        cv_wpl.prop('disabled', true);
+                        cv_height.prop('disabled', true);
+                        cv_width.prop('disabled', true);
+                        toast("We are converting the video now! It will take some time, be patient");
+                        step += 1;
+                        check_status = true;
+                        break;
+                    case 8:
+                        cv_wpl.parent().find(".on-error").show().find("span").text(data.info);
+                        break;
+                    case 16:
+                    case 32:
+                        toast(data.info);
+                        break;
+                }
+            },
+            error: function () {
+                toast("Oops, it seems like we cannot connect to our server right now.");
+            }
+        });
+    }
+
+
+    function calibration_uploader() {
+        let width = $("#cl-width");
+        let height = $("#cl-height");
+
+        if (step !== 2) {
+            toast("Please complete step " + step);
+            $('html, body').animate({
+                scrollTop: $(aArray[step - 1]).offset().top
+            }, 800);
+            return;
+        }
+
+        if (width.val() === "" || height.val() === "") {
+            width.find(".on-error").show().find("span").text("Please enter valid width and height.");
+            return;
+        }
+
+        let w_res = parseInt(width.val()), h_res = parseInt(height.val());
+        if (!(w_res > 0) || !(h_res > 0)) {
+            width.find(".on-error").show().find("span").text("Please enter valid width and height.");
+            return;
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "{% url 'calibration' %}",
+            data: {
+                csrfmiddlewaretoken: token_val,
+                width: width,
+                height: height
+            },
+            success: function (data) {
+                switch (data.code) {
+                    case 0:
+                        width.prop('disabled', true);
+                        height.prop('disabled', true);
+                        step += 1;
+                        break;
+                }
+            },
+            error: function () {
+                toast("Oops, it seems like we cannot connect to our server right now.");
+            }
+        });
+
+    }
+
+
+    function full_img_test() {
+        let w_in = $("#cl-width");
+        let h_in = $("#cl-height");
+
+        if (step !== 2) {
+            toast("Please complete step " + step);
+            $('html, body').animate({
+                scrollTop: $(aArray[step - 1]).offset().top
+            }, 800);
+            return;
+        }
+
+        width = w_in.val();
+        height = h_in.val();
+        if (width === "" || height === "") {
+            w_in.parent().find(".on-error").show().find("span").text("Please enter valid width and height.");
+            return;
+        }
+
+        width = parseInt(width);
+        height = parseInt(height);
+        if (!(width > 0) || !(height > 0)) {
+            w_in.parent().find(".on-error").show().find("span").text("Please enter valid width and height.");
+            return;
+        }
+
+        $("#test-img-bts").css('right', '0');
+        $("#test-img-container").css('left', '0');
+        if (stage === 'ppl_stage') {
+            $("#test-img").attr("src", "/mvpcpy/calibration/?width=" + width + "&height=" + height + "&ppl=" + ppl_pointer + "&stage=ppl");
+        }
+        else {
+            $("#test-img").attr("src", "/mvpcpy/calibration/?width=" + width + "&height=" + height + "&ppl=" + ppl + "&stage=wpl");
+        }
+    }
+
+
+    function next_img() {
+        ppl_pointer += 1;
+        $("#test-img").attr("src", "/mvpcpy/calibration/?width=" + width + "&height=" + height + "&ppl=" + ppl_pointer + "&stage=ppl");
+        if (ppl_pointer >= 30)
+            $("#next-img").prop('disabled', true);
+
+        $("#prev-img").prop('disabled', false);
+    }
+
+
+    function prev_img() {
+        ppl_pointer -= 1;
+        $("#test-img").attr("src", "/mvpcpy/calibration/?width=" + width + "&height=" + height + "&ppl=" + ppl_pointer + "&stage=ppl");
+        if (ppl_pointer <= 1)
+            $("#prev-img").prop('disabled', true);
+
+        $("#next-img").prop('disabled', false);
+    }
+
+
+    function check() {
+        if (stage === 'ppl_stage') {
+            $("#pl-label").text("My ppl is:");
+            $("#pl-modal").css("top", "0");
+        }
+        else {
+            $("#pl-label").text("My wpl is (int):");
+            $("#pl-modal").css("top", "0");
+        }
+    }
+
+
+    function modal_check() {
+        let in_val = $("#pl-input").val();
+        if (in_val === "") {
+            $("#pl-input").parent().find(".on-error").show().find("span").text("Please fill the value.");
+            return;
+        }
+
+        if (stage === 'ppl_stage') {
+            ppl = in_val;
+            stage = 'wpl_stage';
+            $("#test-img").attr("src", "/mvpcpy/calibration/?width=" + width + "&height=" + height + "&ppl=" + ppl + "&stage=wpl");
+            $("#prev-img").prop('disabled', true);
+            $("#next-img").prop('disabled', true);
+            $("#pl-modal").css("top", "-100%");
+            $("#cl-width").prop('disabled', true);
+            $("#cl-height").prop('disabled', true);
+            $("#pl-input").val("");
+            $("#cv-ppl").val(ppl);
+            $("#cv-width").val(width);
+            $("#cv-height").val(height);
+        }
+        else {
+            wpl = parseInt(in_val);
+            $("#pl-modal").css("top", "-100%");
+            $("#cv-wpl").val(wpl);
+            step += 1;
+            close_test();
+        }
+    }
+
+
+    function close_test() {
+        $("#test-img-container").css('left', '-100%');
+        $("#test-img-bts").css('right', '-100%');
+    }
+
+
+    function query_status() {
+        if (!check_status)
+            return;
+
+        $.ajax({
+            type: "GET",
+            url: "{% url 'query-status' %}",
+            data: {
+                wpl: wpl,
+                ppl: ppl,
+                width: width,
+                height: height,
+                v_id: vid_fix
+            },
+            success: function (data) {
+                switch (data.code) {
+                    case 0:
+                        $("#pv-status").text(data.status);
+                        if (data.status === "succeeded") {
+                            $("#pv-player").show().append("            <video width=\"80%\" controls>\n" +
+                                "                <source id=\"pv-src\" src=\"" + data.link + "\" type=\"video/mp4\">\n" +
+                                "            </video>");
+                            window.clearInterval(query_interval);
+                        }
+                        break;
+                    default:
+                        toast("Oops, it seems like something went wrong");
+                        break;
+                }
+            },
+            error: function () {
+                toast("Oops, it seems like we cannot connect to our server right now.");
+            }
+        });
+    }
+</script>
+
+</body>
+</html>
