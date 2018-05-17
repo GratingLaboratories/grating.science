@@ -100,6 +100,10 @@ class VideoConverter:
         a_input_path = os.path.join(settings.YOUTUBE_DOWNLOAD_DIR, 'audio', '{}.{}'.format(y_video.v_id, y_video.a_ext))
         blk_a_path = os.path.join(settings.YOUTUBE_DOWNLOAD_DIR, 'audio', 'blank.mp3')
 
+        logging.info(pe.status)
+        if pe.status != 'queued':
+            return
+
         while not os.path.exists(v_input_path) or not os.path.exists(a_input_path):
             time.sleep(3)
 
@@ -159,7 +163,7 @@ class VideoConverter:
             pe.save()
             res = ProcessEvent.objects.filter(v_id=y_video, width=width, height=height, ppl=ppl, wpl=wpl)
             # cls._task_queue.put_nowait((y_video, params, pe))
-
+        logging.info(len(res))
         cls._task_queue.put_nowait((res[0].v_id, params, res[0]))
 
 
