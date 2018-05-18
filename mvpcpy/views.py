@@ -175,6 +175,10 @@ def youtube_link(request):
     if not v_id:
         return JsonResponse(dict(info='Vid Error', code=1))
 
+    if v_id == '0000':
+        YouTubeVideos.objects.get_or_create(v_id=v_id, status='succeeded', v_ext='mp4', a_ext='mp3')
+        return JsonResponse(dict(code=0), status=202)
+
     try:
         with youtube_dl.YoutubeDL() as ydl:
             info = ydl.extract_info('https://www.youtube.com/watch?v=' + v_id, download=False)
