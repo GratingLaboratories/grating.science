@@ -15,12 +15,22 @@ server {
         root /data/grating.science/data/;
     }
 
-    location / {
-        proxy_pass http://localhost:8000/;
+    location /static/ {
+        root /data/grating.science/;
+        try_files /$uri = 404;
+    }
+
+    location /mvpcpy/ {
+        proxy_pass http://localhost:8000/mvpcpy/;
         client_max_body_size 100M;
         proxy_set_header Host $host:$server_port;
         proxy_set_header X-Read-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    location / {
+        root /data/Incept/index/;
+        try_files /$uri = 404;
     }
 }
