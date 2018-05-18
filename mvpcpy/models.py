@@ -17,5 +17,5 @@ class ProcessEvent(models.Model):
     ppl = models.DecimalField(max_digits=4, decimal_places=2)
     wpl = models.IntegerField()
     status = models.TextField()
-    v_ext = models.CharField(max_length=8)
+    v_ext = models.CharField(max_length=8, default='mp4')
     rid = models.CharField(max_length=OUTPUT_FILENAME_LEN)
