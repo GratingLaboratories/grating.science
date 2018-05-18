@@ -175,7 +175,7 @@ def youtube_link(request):
     if not v_id:
         return JsonResponse(dict(info='Vid Error', code=1))
 
-    if v_id == '0000':
+    if v_id == '000000':
         YouTubeVideos.objects.get_or_create(v_id=v_id, status='succeeded', v_ext='mp4', a_ext='mp3')
         return JsonResponse(dict(code=0), status=202)
 
