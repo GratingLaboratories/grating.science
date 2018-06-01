@@ -682,7 +682,7 @@
     function next_img() {
         ppl_pointer += 1;
         $("#test-img").attr("src", "/mvpcpy/calibration/?width=" + width + "&height=" + height + "&ppl=" + ppl_pointer + "&stage=ppl");
-        if (ppl_pointer >= 30)
+        if (ppl_pointer >= 50)
             $("#next-img").prop('disabled', true);
 
         $("#prev-img").prop('disabled', false);
