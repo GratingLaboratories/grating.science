@@ -229,7 +229,7 @@ def fetch_calibration(request):
     filename = '{}_{}@{}'.format(width, height, ppl)
     response = HttpResponse()
 
-    if not 0 < ppl < 30 or width <= 0 or height <= 0:
+    if not 0 < ppl < 51 or width <= 0 or height <= 0:
         return HttpResponse(status=404)
 
     if cali_stage.lower() == 'ppl':
