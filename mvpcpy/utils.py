@@ -52,7 +52,7 @@ def mk_wpl_img(path, width, height, ppl):
         barsleft = drawleft + lineheight * 2
         barstop = drawtop+lineheight+gap+i*lineheight
         start = 0.0
-        while start+barsleft < drawleft + drawwidth:
+        while start+barsleft < drawleft + drawwidth - int(ppl) - 1:
             for w in range(i+1):
                 for y in range(lineheight):
                     img.putpixel((int(start)+barsleft+w, barstop+y), (0, 255, 0))
